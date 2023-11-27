@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+
+<body
+    style="background-image: url('https://st2.depositphotos.com/15832594/42617/i/600/depositphotos_426173910-stock-photo-empty-space-studio-dark-room.jpg'); background-repeat: no-repeat; background-size:cover;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <h2 class="text-light mt-5 text-center">Know About The Country</h2>
+                <div class="d-flex mt-5">
+                    <input id="countryId" type="text" class="form-control" placeholder="Enter the country name">
+                    <button onclick="searchCountry()" type="button" class="btn btn-success ms-3">Search</button>
+                </div>
+                <div id="CountryData" class="mt-5 d-flex justify-content-center align-items-center">
+
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+
+    <script>
+
+        const searchCountry = async () => {
+            if (countryId.value !== '') {
+                let country = countryId.value;
+
+                const response = await fetch(`https://restcountries.com/v3.1/name/${country}?fullText=true`);
+                response.json().then((data) => {
+                    console.log(data);
+                    let result = data[0];
+                    let cName = result.name.common;
+                    let capital = result.capital[0];
+                    let continent = result.region;
+                    let population = result.population;
+                    let timeZone = result.timezones[0];
+                    let flag = result.flags.png;
+                    let languages = result.languages;
+                    let nativeLng = [];
+                    for (var lng in languages) {
+                        nativeLng.push(languages[lng]);
+                    }
+                    console.log(nativeLng);
+                    let currency = result.currencies;
+                    let curr = [];
+                    for (var cur in currency) {
+                        curr.push(currency[cur].name);
+                    }
+                    let cMap = result.maps.googleMaps;
+                    CountryData.innerHTML =
+                        `<div class="card mt-5" style="width: 18rem;">
+                            <img src="${flag}" class="card-img-top p-3" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title">${cName}</h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Capital: ${capital}</li>
+                                <li class="list-group-item">Population: ${population}</li>
+                                <li class="list-group-item">Time Zone: ${timeZone}</li>
+                                <li class="list-group-item">Continent: ${continent}</li>
+                                <li class="list-group-item">Language: ${nativeLng}</li>
+                                <li class="list-group-item">Currency: ${curr}</li>
+                            </ul>
+                            <div class="card-body">
+                                <a href="${cMap}" class="card-link">Map</a>
+                            </div>
+                        </div>`
+
+                })
+
+
+            }
+            else {
+                alert('');
+            }
+
+        }
+
+
+
+    </script>
+</body>
+
+</html>
